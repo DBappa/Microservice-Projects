@@ -9,4 +9,6 @@ public interface IAccountsService {
      * @param customerDto the data transfer object containing customer details
      */
     void createAccount(CustomerDto customerDto);
+
+    CustomerDto fetchAccountDetails(String mobileNumber);
 }

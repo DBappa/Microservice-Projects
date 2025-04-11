@@ -1,10 +1,13 @@
 package com.clifav.accounts.service.impl;
 
 import com.clifav.accounts.constants.AccountsConstants;
+import com.clifav.accounts.dto.AccountsDto;
 import com.clifav.accounts.dto.CustomerDto;
 import com.clifav.accounts.entity.Accounts;
 import com.clifav.accounts.entity.Customer;
 import com.clifav.accounts.exception.CustomerAlreadyExistsException;
+import com.clifav.accounts.exception.ResourceNotFoundException;
+import com.clifav.accounts.mapper.AccountsMapper;
 import com.clifav.accounts.mapper.CustomerMapper;
 import com.clifav.accounts.repository.AccountsRepository;
 import com.clifav.accounts.repository.CustomerRepository;
@@ -41,6 +44,8 @@ public class AccountsServiceImpl implements IAccountsService {
 
     }
 
+
+
     private Accounts createNewAccount(Customer customer) {
         Accounts newAccount = new Accounts();
         newAccount.setCustomerId(customer.getCustomerId());
@@ -52,5 +57,17 @@ public class AccountsServiceImpl implements IAccountsService {
         newAccount.setCreatedAt(LocalDateTime.now());
         newAccount.setCreatedBy("Anonymous");
         return newAccount;
+    }
+
+    @Override
+    public CustomerDto fetchAccountDetails(String mobileNumber) {
+
+        Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber));
+
+        Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId()).orElseThrow(() -> new ResourceNotFoundException("Accounts", "customerId", customer.getCustomerId().toString()));
+
+        CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
+        customerDto.setAccountsDto(AccountsMapper.mapToAccountsDto(accounts,new AccountsDto()));
+        return customerDto;
     }
 }
