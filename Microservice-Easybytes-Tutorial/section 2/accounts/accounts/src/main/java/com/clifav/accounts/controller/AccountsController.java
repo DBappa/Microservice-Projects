@@ -5,6 +5,10 @@ import com.clifav.accounts.constants.AccountsConstants;
 import com.clifav.accounts.dto.CustomerDto;
 import com.clifav.accounts.dto.ResponseDto;
 import com.clifav.accounts.service.IAccountsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -16,6 +20,10 @@ import org.springframework.web.bind.annotation.*;
 
 
 
+@Tag(
+        name = "CRUD REST APIs for Accounts in EasyBank",
+        description = "API for managing customer accounts"
+)
 @RestController
 @RequestMapping(path = "/api", produces = {MediaType.APPLICATION_JSON_VALUE})
 @AllArgsConstructor
@@ -24,6 +32,14 @@ public class AccountsController {
 
     private IAccountsService accountsService;
 
+    @Operation(
+            summary = "Create a new account for a customer",
+            description = "Creates a new account for a customer using the provided customer information"
+    )
+    @ApiResponse(
+            responseCode = "201",
+            description = "Account created successfully"
+    )
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createAccount(@RequestBody @Valid CustomerDto customerDto) {
 
@@ -39,6 +55,21 @@ public class AccountsController {
 
         return ResponseEntity.ok(accountsService.fetchAccountDetails(mobileNumber));
     }
+
+    @Operation(
+            summary = "Create a new account for a customer",
+            description = "Creates a new account for a customer using the provided customer information"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal server error"
+            )
+    })
 
     @PutMapping("/update")
     public ResponseEntity<ResponseDto> updateAccount(@RequestBody @Valid CustomerDto customerDto) {
