@@ -3,9 +3,12 @@ package com.clifav.accounts.controller;
 
 import com.clifav.accounts.constants.AccountsConstants;
 import com.clifav.accounts.dto.CustomerDto;
+import com.clifav.accounts.dto.ErrorResponseDto;
 import com.clifav.accounts.dto.ResponseDto;
 import com.clifav.accounts.service.IAccountsService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -67,7 +70,10 @@ public class AccountsController {
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "HTTP Status Internal server error"
+                    description = "HTTP Status Internal server error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
             )
     })
 
